@@ -1,0 +1,7 @@
+= pocket-square-users
+
+Microservice for managing users
+
+TravisCI - https://travis-ci.org/pocket-square/pocket-square-users/
+
+DockerHub - https://hub.docker.com/r/pocket-square/pocket-square-users/
