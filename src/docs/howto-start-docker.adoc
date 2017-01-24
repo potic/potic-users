@@ -1,0 +1,37 @@
+= HOWTO: start service as docker container
+
+== Cleaning previously started container
+
+[source,shell]
+----
+docker ps -a
+docker kill pocket_square_users; docker rm pocket_square_users
+----
+
+== Configuration parameters
+
+Following environment variable are available for global service configuration:
+
+MONGO_DATABASE_NAME - mongodb database name to use (default is vkIngested)
+
+MONGO_AUTH_DATABASE_NAME - mongodb database name used for authentication (default is admin)
+
+MONGO_HOST - host of mongodb instance (default is vuzoll_mongo)
+
+MONGO_PORT - port of mongodb instance (default is 27017)
+
+MONGO_USERNAME - username for authentication to mongodb (default is ingestVkService)
+
+MONGO_PASSWORD - password for authentication to mongodb
+
+ROOT_LOG_LEVEL - logging level for third-party libraries (default is INFO)
+
+POCKET_SQUARE_LOG_LEVEL - logging level for service code (default is INFO)
+
+== Start service
+
+[source,shell]
+----
+docker pull pocketsquare/pocket-square-users:$TAG
+docker run -dit --name pocket_square_users --link pocker_square_mongo -v /logs:/logs -e MONGO_PASSWORD=$MONGODB_PASSWORD -p 28101:8080 pocketsquare/pocket-square-users:$TAG
+----

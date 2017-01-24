@@ -29,4 +29,4 @@ buildScan {
 }
 
 apply plugin: 'application'
-mainClassName = 'com.github.pocketsquare.articles.Application'
+mainClassName = 'com.github.pocketsquare.users.Application'
