@@ -1,4 +1,4 @@
-package com.github.pocketsquare.users
+package com.github.pocketsquare.users.domain
 
 import org.springframework.data.annotation.Id
 
