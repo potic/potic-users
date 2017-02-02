@@ -20,6 +20,18 @@ Development instance - 188.166.174.189:28101
 
 POST to https://getpocket.com/v3/oauth/request
 {
-    "consumer_key":"",
+    "consumer_key":"$APPLICATION_KEY",
     "redirect_uri":"https://oauth.vk.com/blank.html"
 }
+
+Copy code from the response and go to the following link in your browser:
+
+https://getpocket.com/auth/authorize?request_token=$CODE&redirect_uri=https://oauth.vk.com/blank.html
+
+POST to https://getpocket.com/v3/oauth/authorize
+{
+    "consumer_key":"$APPLICATION_KEY",
+    "code":"$CODE"
+}
+
+Copy access_token from response.
