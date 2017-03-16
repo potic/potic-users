@@ -12,15 +12,15 @@ docker kill pocket-square-users; docker rm pocket-square-users
 
 Following environment variable are available for global service configuration:
 
-MONGO_DATABASE_NAME - mongodb database name to use (default is vkIngested)
+MONGO_DATABASE_NAME - mongodb database name to use (default is pocketSquare)
 
 MONGO_AUTH_DATABASE_NAME - mongodb database name used for authentication (default is admin)
 
-MONGO_HOST - host of mongodb instance (default is vuzoll_mongo)
+MONGO_HOST - host of mongodb instance (default is pocket-square-mongo)
 
 MONGO_PORT - port of mongodb instance (default is 27017)
 
-MONGO_USERNAME - username for authentication to mongodb (default is ingestVkService)
+MONGO_USERNAME - username for authentication to mongodb (default is usersService)
 
 MONGO_PASSWORD - password for authentication to mongodb
 
