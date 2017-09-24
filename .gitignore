@@ -11,3 +11,7 @@ out/
 # Gradle #
 build/
 .gradle/
+
+# Development environment #
+logs/
+mongodb-dev.properties

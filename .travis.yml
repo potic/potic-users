@@ -15,23 +15,30 @@ cache:
   - "$HOME/.gradle/wrapper/"
 
 before_install:
+- tar xvf deployment_keys.tar
 - chmod +x gradlew
 
 install:
-- "./gradlew build -Dscan"
+- "./gradlew build jacocoTestReport --scan -PpatchVersion=$TRAVIS_BUILD_NUMBER"
+
+after_success:
+- bash <(curl -s https://codecov.io/bash)
 
 before_script:
 - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- eval "$(ssh-agent -s)"
+- chmod 600 deployment_keys/deploy_test
+- ssh-add deployment_keys/deploy_test
+- chmod 600 deployment_keys/deploy_prod
+- ssh-add deployment_keys/deploy_prod
 
 script:
-- export DOCKER_REPO=pocketsquare/pocket-square-users
+- export DOCKER_REPO=potic/potic-users
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH | tr '/' '-' ; fi`
+- export TAG_VERSION=`cat VERSION`.$TRAVIS_BUILD_NUMBER
 - docker build -t $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER .
 - docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG
+- docker tag $DOCKER_REPO:travis-$TRAVIS_BUILD_NUMBER $DOCKER_REPO:$TAG_VERSION
 - docker push $DOCKER_REPO
-
-env:
-  global:
-  - secure: FE12TLNMYPAMwoL4XJ8PfXZ2dd6YBx5ic34iNJAdEo7P5gHarl9S2xVzBnjZHl5AkTPVWLhClvteX9RyAPrW+zdz6RvqyhEyItZoiFrcW6p5yj4hoabnv9zdiXPzqiWgp1pCiYYxTjWZ7GAYpIq+nhlZGMYRXgTW09pshAB6L7VbKr4tXvEyizqj2O/cVwWh1pN4MUHYM8xUGP1kwRyeJHUAJw1dOimin1LkWmMEu082Aji78dHTckJ0CLBWsHGk3cwfNJummOQgPCUPnp7iyMsehQaHKRqO8NdScGCLUcTlJrmfjIlxl4MniTwmuUEHTG3iRshavccJDVyYQDjHmktkDmC3hbnwDiwN4Py2E6U2+rGWQCaw3K9nt0wE9JbKS7ijAEKt5YhhxQsUu+jBxocVH/5TWP0Od8NAaKHDzKfqEA1hTQ/Nz2GJQWFKlDR/Ll/30UKSuvPldH7n+/foU1MyD5q2N/YAdY/kmczLUJNZ2Fh40S5h2lI8ZO0rKoPcjL6qN0xni3//DO86EIkvCx5NDdP6xaK2knjzGUQzNZtX853e7X4+CWlY7gvn/00pmul0mpZz4v/cwUTXhakU4mSnamKee6drMam2UHHRVNS7Ty8CgpsBavrgV6adWSKNJ5Va0tBprUppolIh9kM49YtRx9zZaaTSifVZCRMbiKg=
-  - secure: Gmk5/XPfMqTirhdIsU/uZ8AIOFTdr/Tk7HCpadxDcnW0Sm0VCSpLXFmhhnRC0IWpvQ5pDFaXQb8ok3gjk5dDQXwlQCqt5BTcdL6cUBvzhqxBAAgMCYLHBB8rRqN8PUmMVHAMOBNxyCgjVkOiOvs+eSSJbYMlHKRDHw7RrVZsK5YbfV30P02sTNO8tYJzh0lzb2RVE8YV9/7CpWxlshu5V2wG2K+docymOvNSBN19O5QgGxILapQTpr7l8oP+/RTTEopTZAAHVXZXR+hG6zdLc3Mfn4570wZmJnL8NDMKTWXK4I5whGTdg2zSMkaTEL2N5GvtQIH3cffqKaGZFN0rb5Cuaz8Kbw1OZgI6VXfJJbTlol3Eqqms/VtJ3pZ+10rNLFjcYrFiTCxMwEwN9q1NFytvfYXAyq4y+jDGLx6MxbHGDgX/dWJZ+HGWURqdJZQ46VdA3qIoeBp2HdjxBuL7URK2HnmXhuqqQIye9fqj8RhDpct9I/h9PCbqKfeYGJh13CCtmKGD93sCVLF3v1d15FZP16MgSPfJ5zMiR7Lr/VVVY73BnkV01/p3zjTcsBnbxU23VLfwmo8Nvaft2lhO+fWw4C/pg/VxUjJuRzmekREXC8ggdQ5WU0FrIKMWgt04VHWLoM7CUjxmZxWGayvzpNP0j0j1NSR3iccmh1tIZfs=
-  - secure: ZDSD1S6NnGoWV2ym27q4epK6my72kvQJcTZgOJ8+hC/la0UW06ZNoo1sgwPGUHNp4/q+os1yRm7N/4agg6MxMkiVVTxVM4+Pu47WQqmoA4w3vbWEVjioytCTv8YeBF+HWizlaJVL/vJSQAnhz/j2j4SFCgm4ZJsPhTqecmOkH3Sdmy9p1kGUXJ82Wad5/Hn7aeC6aYPgUb81KWwOXCxhOSwhkQ6sYuzDubsccIGn+FESaXCcpoK499DReIYdnJXeNaVsP65g37W3uXYgNmmLnnaBUCuR+tZBSGs1Dol6MiHHr1iLfWEcG3EwOs3LwTgo/xMQmo1860V5hOfcfbq8bdziRC+tnuLRiCHu9Idmz8lixBrAEtsIgS/JdRoD4ZZldLLvxD0OD1xi7nZhlvwtio0fMRM7J3ovJmjW8Hp+O4RCJNMoSQUZ1T++hfvweCDuCF3HsRAonsmTkktdn4GcLOQ0RMg9+Z4jwXqEQ5tybxHwd5Q5QNueBOt6MrHJZdsx9/t0A+p6h8UuidgWTbh91WIFA1J4zQEoWupr04Smqb81tQnQewqopRDKD3wG9hA2pt1sKGu85t9tcZOs4QKcxs4sxLHad/HEKT38X2M1XHZIvmmZc85TxHXcUfaQcsDkWUUkCfGGwHYDQJETCWamC8FosYuBfbzkvWUbCfb8eqo=
+- if [ "$TRAVIS_BRANCH" == "develop" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_TEST_USER"@"$DEPLOY_TEST_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=test MONGO_PASSWORD=$TEST_MONGO_PASSWORD 'bash -s' < src/main/scripts/deploy.sh; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then ssh -o "StrictHostKeyChecking no" "$DEPLOY_PROD_USER"@"$DEPLOY_PROD_HOST" TAG_TO_DEPLOY=$TAG_VERSION ENVIRONMENT_NAME=prod MONGO_PASSWORD=$PROD_MONGO_PASSWORD 'bash -s' < src/main/scripts/deploy.sh; fi

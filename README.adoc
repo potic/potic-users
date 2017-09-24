@@ -1,15 +1,26 @@
-= pocket-square-users
+= potic-users
+:linkattrs:
 
-Microservice for managing users
+Service for managing users.
 
-TravisCI - https://travis-ci.org/pocket-square/pocket-square-users/
+== Travis job
 
-DockerHub - https://hub.docker.com/r/pocketsquare/pocket-square-users/
+image:https://travis-ci.org/potic/potic-users.svg?branch=develop["Travis job", link="https://travis-ci.org/potic/potic-users"]
+
+== Code coverage
+
+image:https://codecov.io/gh/potic/potic-users/branch/develop/graph/badge.svg["Code coverage", link="https://codecov.io/gh/potic/potic-users"]
+
+== Docker repository
+
+https://hub.docker.com/r/potic/potic-users/
 
 == Documentation
 
-link:src/docs/howto-start-docker.adoc[HOWTO: start service as docker container]
+link:src/main/scripts/deploy.sh[HOWTO: start service as docker container, window="_blank"]
 
-link:src/docs/howto-run-service.adoc[HOWTO: run service]
+link:src/docs/howto-get-access-token.adoc[HOWTO: get access token]
 
-link:src/docs/mongodb-setup.adoc[MongoDB setup]
+link:src/docs/configuration-parameters.adoc[Service configuration parameters]
+
+link:src/docs/environments.adoc[Environments]
