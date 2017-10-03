@@ -37,4 +37,15 @@ class UserService {
             throw new RuntimeException('finding user id by social id failed', e)
         }
     }
+
+    List<String> getAllUsersIds() {
+        log.info 'finding all user ids'
+
+        try {
+            return mongoTemplate.findAll(User).collect({ user -> user.id })
+        } catch (e) {
+            log.error "finding all user ids failed: $e.message", e
+            throw new RuntimeException('finding all user ids failed', e)
+        }
+    }
 }

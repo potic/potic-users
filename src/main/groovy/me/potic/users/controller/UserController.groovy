@@ -37,4 +37,18 @@ class UserController {
             throw new RuntimeException("request for /user/me failed: $e.message", e)
         }
     }
+
+    @Timed(name = 'users.ids')
+    @CrossOrigin
+    @GetMapping(path = '/users/ids')
+    @ResponseBody List<String> getAllUsersIds() {
+        log.info 'receive request for /users/ids'
+
+        try {
+            return userService.getAllUsersIds()
+        } catch (e) {
+            log.error "request for /users/ids failed: $e.message", e
+            throw new RuntimeException("request for /users/ids failed: $e.message", e)
+        }
+    }
 }
