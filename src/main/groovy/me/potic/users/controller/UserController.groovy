@@ -6,13 +6,7 @@ import me.potic.users.domain.User
 import me.potic.users.service.Auth0Service
 import me.potic.users.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 import java.security.Principal
 
@@ -71,29 +65,29 @@ class UserController {
 
     @Timed(name = 'user.register.socialId')
     @CrossOrigin
-    @PostMapping(path = '/user/{userId}/register')
-    @ResponseBody User registerSocialId(@PathVariable('userId') String userId, @RequestParam(value = 'socialId') String socialId) {
-        log.info "receive POST request for /user/$userId/register?socialId=***"
+    @PostMapping(path = '/user/{userId}/register/socialId/{socialId}')
+    @ResponseBody User registerSocialId(@PathVariable('userId') String userId, @PathVariable(value = 'socialId') String socialId) {
+        log.info "receive POST request for /user/$userId/register/socialId"
 
         try {
             return userService.registerSocialId(userId, socialId)
         } catch (e) {
-            log.error "receive POST request for /user/$userId/register?socialId=*** failed: $e.message", e
-            throw new RuntimeException("receive POST request for /user/$userId/register?socialId=*** failed: $e.message", e)
+            log.error "receive POST request for /user/$userId/register/socialId failed: $e.message", e
+            throw new RuntimeException("receive POST request for /user/$userId/register/socialId failed: $e.message", e)
         }
     }
 
     @Timed(name = 'user.register.pocketAccessToken')
     @CrossOrigin
-    @PostMapping(path = '/user/{userId}/register')
-    @ResponseBody User registerPocketAccessToken(@PathVariable('userId') String userId, @RequestParam(value = 'pocketAccessToken') String pocketAccessToken) {
-        log.info "receive POST request for /user/$userId/register?pocketAccessToken=***"
+    @PostMapping(path = '/user/{userId}/register/pocketAccessToken/{pocketAccessToken}')
+    @ResponseBody User registerPocketAccessToken(@PathVariable('userId') String userId, @PathVariable(value = 'pocketAccessToken') String pocketAccessToken) {
+        log.info "receive POST request for /user/$userId/register/pocketAccessToken"
 
         try {
             return userService.registerPocketAccessToken(userId, pocketAccessToken)
         } catch (e) {
-            log.error "receive POST request for /user/$userId/register?pocketAccessToken=*** failed: $e.message", e
-            throw new RuntimeException("receive POST request for /user/$userId/register?pocketAccessToken=*** failed: $e.message", e)
+            log.error "receive POST request for /user/$userId/register/pocketAccessToken failed: $e.message", e
+            throw new RuntimeException("receive POST request for /user/$userId/register/pocketAccessToken failed: $e.message", e)
         }
     }
 }
