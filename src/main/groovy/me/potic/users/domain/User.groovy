@@ -7,7 +7,7 @@ class User {
     @Id
     String id
 
-    String name
+    Collection<String> socialIds
 
-    String accessToken
+    String pocketAccessToken
 }
