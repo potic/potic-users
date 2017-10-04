@@ -38,14 +38,14 @@ class UserService {
         }
     }
 
-    List<String> getAllUsersIds() {
-        log.info 'finding all user ids'
+    List<User> getAllUsers() {
+        log.info 'finding all users'
 
         try {
-            return mongoTemplate.findAll(User).collect({ user -> user.id })
+            return mongoTemplate.findAll(User)
         } catch (e) {
-            log.error "finding all user ids failed: $e.message", e
-            throw new RuntimeException('finding all user ids failed', e)
+            log.error "finding all users failed: $e.message", e
+            throw new RuntimeException('finding all users failed', e)
         }
     }
 

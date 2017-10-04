@@ -35,17 +35,17 @@ class UserController {
         }
     }
 
-    @Timed(name = 'users.ids')
+    @Timed(name = 'user')
     @CrossOrigin
-    @GetMapping(path = '/users/ids')
-    @ResponseBody List<String> getAllUsersIds() {
-        log.info 'receive GET request for /users/ids'
+    @GetMapping(path = '/user')
+    @ResponseBody List<User> getAllUsers() {
+        log.info 'receive GET request for /users'
 
         try {
-            return userService.getAllUsersIds()
+            return userService.getAllUsers()
         } catch (e) {
-            log.error "GET request for /users/ids failed: $e.message", e
-            throw new RuntimeException("GET request for /users/ids failed: $e.message", e)
+            log.error "GET request for /users failed: $e.message", e
+            throw new RuntimeException("GET request for /users failed: $e.message", e)
         }
     }
 
