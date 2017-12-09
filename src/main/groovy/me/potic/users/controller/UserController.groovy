@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*
 
 import java.security.Principal
 
+import static me.potic.users.util.Utils.maskForLog
+
 @RestController
 @Slf4j
 class UserController {
@@ -20,36 +22,33 @@ class UserController {
     @Autowired
     Auth0Service auth0Service
 
-    @Timed(name = 'user.me')
     @CrossOrigin
     @GetMapping(path = '/user/me')
     @ResponseBody User findUserByAuth0Token(final Principal principal) {
-        log.info 'receive GET request for /user/me'
+        log.info "receive GET request for /user/me with token=${maskForLog(principal.token)}"
 
         try {
             String socialId = auth0Service.getSocialId(principal.token)
             return userService.findUserBySocialId(socialId)
         } catch (e) {
-            log.error "GET request for /user/me failed: $e.message", e
-            throw new RuntimeException("GET request for /user/me failed: $e.message", e)
+            log.error "GET request for /user/me with token=${maskForLog(principal.token)} failed: $e.message", e
+            throw new RuntimeException("GET request for /user/me with token=${maskForLog(principal.token)} failed: $e.message", e)
         }
     }
 
-    @Timed(name = 'user')
     @CrossOrigin
     @GetMapping(path = '/user')
     @ResponseBody List<User> getAllUsers() {
-        log.info 'receive GET request for /users'
+        log.info 'receive GET request for /user'
 
         try {
             return userService.getAllUsers()
         } catch (e) {
-            log.error "GET request for /users failed: $e.message", e
-            throw new RuntimeException("GET request for /users failed: $e.message", e)
+            log.error "GET request for /user failed: $e.message", e
+            throw new RuntimeException("GET request for /user failed: $e.message", e)
         }
     }
 
-    @Timed(name = 'user.POST')
     @CrossOrigin
     @PostMapping(path = '/user')
     @ResponseBody User createNewUser() {
@@ -63,17 +62,16 @@ class UserController {
         }
     }
 
-    @Timed(name = 'user.register.socialId')
     @CrossOrigin
     @PostMapping(path = '/user/{userId}/register/socialId/{socialId}')
     @ResponseBody User registerSocialId(@PathVariable('userId') String userId, @PathVariable(value = 'socialId') String socialId) {
-        log.info "receive POST request for /user/$userId/register/socialId"
+        log.info "receive POST request for /user/$userId/register/socialId/${maskForLog(socialId)}"
 
         try {
             return userService.registerSocialId(userId, socialId)
         } catch (e) {
-            log.error "receive POST request for /user/$userId/register/socialId failed: $e.message", e
-            throw new RuntimeException("receive POST request for /user/$userId/register/socialId failed: $e.message", e)
+            log.error "POST request for /user/$userId/register/socialId/${maskForLog(socialId)} failed: $e.message", e
+            throw new RuntimeException("POST request for /user/$userId/register/socialId/${maskForLog(socialId)} failed: $e.message", e)
         }
     }
 
@@ -81,13 +79,13 @@ class UserController {
     @CrossOrigin
     @PostMapping(path = '/user/{userId}/register/pocketAccessToken/{pocketAccessToken}')
     @ResponseBody User registerPocketAccessToken(@PathVariable('userId') String userId, @PathVariable(value = 'pocketAccessToken') String pocketAccessToken) {
-        log.info "receive POST request for /user/$userId/register/pocketAccessToken"
+        log.info "receive POST request for /user/$userId/register/pocketAccessToken/${maskForLog(pocketAccessToken)}"
 
         try {
             return userService.registerPocketAccessToken(userId, pocketAccessToken)
         } catch (e) {
-            log.error "receive POST request for /user/$userId/register/pocketAccessToken failed: $e.message", e
-            throw new RuntimeException("receive POST request for /user/$userId/register/pocketAccessToken failed: $e.message", e)
+            log.error "POST request for /user/$userId/register/pocketAccessToken/${maskForLog(pocketAccessToken)} failed: $e.message", e
+            throw new RuntimeException("POST request for /user/$userId/register/pocketAccessToken/${maskForLog(pocketAccessToken)} failed: $e.message", e)
         }
     }
 }
