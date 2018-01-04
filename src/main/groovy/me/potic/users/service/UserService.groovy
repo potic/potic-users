@@ -1,6 +1,5 @@
 package me.potic.users.service
 
-import com.codahale.metrics.annotation.Timed
 import groovy.util.logging.Slf4j
 import me.potic.users.domain.User
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,9 +16,8 @@ class UserService {
     @Autowired
     MongoTemplate mongoTemplate
 
-    @Timed(name = 'findUserBySocialId')
     User findUserBySocialId(String socialId) {
-        log.info 'finding user id by social id'
+        log.debug 'finding user id by social id'
 
         try {
             Collection<User> result = mongoTemplate.find(query(where('socialIds').is(socialId)), User)
@@ -39,7 +37,7 @@ class UserService {
     }
 
     List<User> getAllUsers() {
-        log.info 'finding all users'
+        log.debug 'finding all users'
 
         try {
             return mongoTemplate.findAll(User)
@@ -50,7 +48,7 @@ class UserService {
     }
 
     User createNewUser() {
-        log.info 'creating new user'
+        log.debug 'creating new user'
 
         try {
             User user = new User()
@@ -63,7 +61,7 @@ class UserService {
     }
 
     User registerSocialId(String userId, String socialId) {
-        log.info "registering social id for user $userId"
+        log.debug "registering social id for user $userId"
 
         try {
             User user = mongoTemplate.find(query(where('id').is(userId)), User).first()
@@ -77,7 +75,7 @@ class UserService {
     }
 
     User registerPocketAccessToken(String userId, String pocketAccessToken) {
-        log.info "registering pocket access token for user $userId"
+        log.debug "registering pocket access token for user $userId"
 
         try {
             User user = mongoTemplate.find(query(where('id').is(userId)), User).first()
